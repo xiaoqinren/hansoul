@@ -8,7 +8,7 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Missing or empty prompt' });
     }
 
-    const API_KEY = process.env.DASHSCOPE_API_KEY || "sk-43ed3d1350764028bc8592ca5dc1880a";
+    const API_KEY = process.env.DASHSCOPE_API_KEY || "sk-b0162bac3a914139a921b86745e3293c";
     const APP_ID = "2ad8881cc5a5492b9636afd2832fe4e3";
 
     try {

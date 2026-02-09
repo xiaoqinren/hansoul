@@ -79,7 +79,7 @@
             try {
                 // 注意：为了安全，建议 Vercel 部署后将 API 调用逻辑移至 Vercel Serverless Functions
                 // 这里暂时演示直接调用（生产环境建议通过后端转发以保护 API Key）
-                const response = await fetch('https://dashscope.aliyuncs.com/api/v1/apps/2ad8881cc5a5492b9636afd2832fe4e3/completion', {
+                const response = await fetch('/api/generate', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -106,3 +106,4 @@
     </script>
 </body>
 </html>
+

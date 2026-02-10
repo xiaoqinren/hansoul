@@ -24,17 +24,16 @@
         .btn-ink {
             background: #1a1a1a;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            -webkit-tap-highlight-color: transparent;
         }
-        .btn-ink:hover {
-            background: #b91c1c;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(185, 28, 28, 0.2);
-        }
-        /* 中国风名片：手机居中、不溢出 */
+        .btn-ink:hover { background: #b91c1c; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(185, 28, 28, 0.2); }
+        .btn-ink:active { background: #b91c1c; }
+        .btn-ink:disabled { background: #7f1d1d; color: rgba(255,255,255,0.95); cursor: not-allowed; }
+        /* 中国风名片：宣纸白 + 墨色字 + 朱砂红点缀，下载图片也一致 */
         .name-card-wrap {
-            background: linear-gradient(135deg, #fef8f0 0%, #fce8e0 100%);
-            border: 3px solid #b91c1c;
-            box-shadow: inset 0 0 0 1px #c2410c, 0 4px 12px rgba(0,0,0,0.15);
+            background: #faf8f5;
+            border: 2px solid #8b4513;
+            box-shadow: 0 2px 8px rgba(139, 69, 19, 0.12);
             width: 100%;
             max-width: 320px;
             min-height: 200px;
@@ -49,16 +48,17 @@
             position: absolute;
             width: 24px;
             height: 24px;
-            border: 2px solid #b91c1c;
+            border: 2px solid #8b4513;
             top: 8px;
         }
         .name-card-wrap::before { left: 8px; }
         .name-card-wrap::after { right: 8px; border-left: none; }
-        /* 名片名字：毛笔风 马善政 为主，楷体/宋体 备选，最能代表中国书写传统 */
-        .name-card-name { font-family: 'Ma Shan Zheng', 'KaiTi', 'STKaiti', 'SimKai', 'Noto Serif SC', serif; font-size: 2.5rem; color: #1a1a1a; line-height: 1.4; text-align: center; margin-bottom: 12px; }
+        .name-card-name { font-family: 'Ma Shan Zheng', 'KaiTi', 'STKaiti', 'SimKai', 'Noto Serif SC', serif; font-size: 2.5rem; color: #2c1810; line-height: 1.4; text-align: center; margin-bottom: 12px; }
         .name-card-divider { width: 60px; height: 2px; background: #b91c1c; margin: 12px auto; }
-        .name-card-brand { font-family: 'Noto Serif SC', serif; font-size: 0.75rem; color: #7f1d1d; letter-spacing: 0.2em; text-align: center; }
-        .name-card-slogan { font-size: 0.65rem; color: #991b1b; opacity: 0.9; text-align: center; margin-top: 4px; font-style: italic; }
+        .name-card-brand { font-family: 'Noto Serif SC', serif; font-size: 0.75rem; color: #8b4513; letter-spacing: 0.2em; text-align: center; margin-top: 10px; }
+        .name-card-slogan { font-size: 0.5rem; color: #a0522d; opacity: 0.9; text-align: center; margin-top: 2px; font-style: italic; }
+        .name-card-url { font-size: 0.45rem; color: #8b7355; text-align: center; margin-top: 4px; letter-spacing: 0.05em; }
+        .name-card-latin { color: #4a3728 !important; }
         /* 印章：15mm 方形，白底红字，名字横排，本名在下小字，标注尺寸。三种风格用三种主流中文字体区分 */
         .seal-preview {
             width: 56px; height: 56px;
@@ -122,8 +122,9 @@
                         <div class="name-card-divider"></div>
                         <p class="name-card-brand">印刻 INKUL</p>
                         <p class="name-card-slogan">Every soul deserves a Chinese name.</p>
+                        <p class="name-card-url">https://inkul.name</p>
                     </div>
-                    <button type="button" onclick="downloadNameCard()" class="mt-2 w-full py-1.5 rounded-lg border-2 border-red-700 text-red-700 font-bold text-xs hover:bg-red-50 transition-colors">
+                    <button type="button" onclick="downloadNameCard()" class="mt-1 w-full py-1.5 rounded-lg border-2 border-red-700 text-red-700 font-bold text-xs hover:bg-red-50 transition-colors">
                         Download as image
                     </button>
                     <!-- 笔顺与读音：紧接在 download 下方 -->

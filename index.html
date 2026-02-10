@@ -167,12 +167,14 @@
         }
 
         function extractNameOnly(fullText) {
-            var s = fullText.trim().replace(/\s+/g, ' ');
-            var afterColon = s.split(/[：:]/).pop().trim();
-            afterColon = afterColon.replace(/\s*[（(].*?[）)]\s*/g, '').trim();
+            var s = fullText.trim();
+            // 优先取整段里的中文名（2～6 个汉字），避免括号里的中文被删掉后只剩英文
+            var chineseMatch = s.match(/[\u4e00-\u9fff]{2,6}/);
+            if (chineseMatch) return chineseMatch[0];
+            // 没有中文时再取冒号后或第一行（可能是纯拼音）
+            var afterColon = s.split(/[：:]/).pop().trim().replace(/\s+/g, ' ');
             var firstLine = afterColon.split(/[\n\r]/)[0].trim();
-            var match = firstLine.match(/[\u4e00-\u9fff]{2,6}/);
-            return match ? match[0] : (firstLine.slice(0, 6) || firstLine);
+            return firstLine.slice(0, 8) || firstLine || s.slice(0, 8);
         }
 
         function showNameCard() {

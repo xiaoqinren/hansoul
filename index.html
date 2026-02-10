@@ -59,6 +59,11 @@
         .name-card-slogan { font-size: 0.5rem; color: #a0522d; opacity: 0.9; text-align: center; margin-top: 2px; font-style: italic; }
         .name-card-url { font-size: 0.45rem; color: #8b7355; text-align: center; margin-top: 4px; letter-spacing: 0.05em; }
         .name-card-latin { color: #4a3728 !important; }
+        .name-card-zodiac { position: absolute; font-size: 0.85rem; opacity: 0.88; }
+        .name-card-zodiac-tl { top: 6px; left: 8px; }
+        .name-card-zodiac-tr { top: 6px; right: 8px; }
+        .name-card-zodiac-bl { bottom: 6px; left: 8px; }
+        .name-card-zodiac-br { bottom: 6px; right: 8px; }
         /* 印章：15mm 方形，白底红字，名字横排，本名在下小字，标注尺寸。三种风格用三种主流中文字体区分 */
         .seal-preview {
             width: 56px; height: 56px;
@@ -96,6 +101,9 @@
                 <label class="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-wider">Your name</label>
                 <input type="text" id="customerName" placeholder="e.g. John Smith"
                     class="w-full px-3 py-2.5 rounded-lg border-2 border-gray-100 focus:border-red-700 focus:ring-0 outline-none bg-white/50 text-sm" />
+                <label class="mt-2 block text-[11px] font-semibold text-gray-600">Birth date (optional)</label>
+                <input type="date" id="birthDate"
+                    class="mt-1 w-full px-3 py-2 rounded-lg border-2 border-gray-100 focus:border-red-700 focus:ring-0 outline-none bg-white/50 text-xs text-gray-700" />
             </div>
             <div>
                 <label class="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-wider">Tell us your story</label>
@@ -123,6 +131,10 @@
                         <p class="name-card-brand">印刻 INKUL</p>
                         <p class="name-card-slogan">Every soul deserves a Chinese name.</p>
                         <p class="name-card-url">https://inkul.name</p>
+                        <div id="nameCardZodiacTL" class="name-card-zodiac name-card-zodiac-tl"></div>
+                        <div id="nameCardZodiacTR" class="name-card-zodiac name-card-zodiac-tr"></div>
+                        <div id="nameCardZodiacBL" class="name-card-zodiac name-card-zodiac-bl"></div>
+                        <div id="nameCardZodiacBR" class="name-card-zodiac name-card-zodiac-br"></div>
                     </div>
                     <button type="button" onclick="downloadNameCard()" class="mt-1 w-full py-1.5 rounded-lg border-2 border-red-700 text-red-700 font-bold text-xs hover:bg-red-50 transition-colors">
                         Download as image
@@ -305,6 +317,24 @@
             var latinEl = document.getElementById('nameCardLatin');
             latinEl.innerText = latin || '';
             latinEl.style.display = latin ? 'block' : 'none';
+
+            // 根据出生年份计算生肖，在名片四角展示图案
+            var birth = document.getElementById('birthDate') ? document.getElementById('birthDate').value : '';
+            var zodiacChar = '';
+            if (birth && birth.length >= 4) {
+                var year = parseInt(birth.slice(0, 4), 10);
+                if (!isNaN(year)) {
+                    var animals = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
+                    var emojis =  ['🐭','🐮','🐯','🐰','🐲','🐍','🐴','🐑','🐒','🐔','🐶','🐷'];
+                    var idx = (year - 4) % 12;
+                    if (idx < 0) idx += 12;
+                    zodiacChar = emojis[idx] + ' ' + animals[idx];
+                }
+            }
+            ['TL','TR','BL','BR'].forEach(function(pos) {
+                var el = document.getElementById('nameCardZodiac' + pos);
+                if (el) el.textContent = zodiacChar || '';
+            });
         }
 
         function downloadNameCard() {

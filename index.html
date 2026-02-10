@@ -43,30 +43,16 @@
             position: relative;
             box-sizing: border-box;
         }
-        .name-card-wrap::before, .name-card-wrap::after {
-            content: '';
-            position: absolute;
-            width: 24px;
-            height: 24px;
-            border: 2px solid #8b4513;
-            top: 8px;
-        }
-        .name-card-wrap::before { left: 8px; }
-        .name-card-wrap::after { right: 8px; border-left: none; }
         .name-card-name { font-family: 'Ma Shan Zheng', 'KaiTi', 'STKaiti', 'SimKai', 'Noto Serif SC', serif; font-size: 2.5rem; color: #2c1810; line-height: 1.4; text-align: center; margin-bottom: 12px; }
         .name-card-divider { width: 60px; height: 2px; background: #b91c1c; margin: 12px auto; }
         .name-card-brand { font-family: 'Noto Serif SC', serif; font-size: 0.75rem; color: #8b4513; letter-spacing: 0.2em; text-align: center; margin-top: 10px; }
         .name-card-slogan { font-size: 0.5rem; color: #a0522d; opacity: 0.9; text-align: center; margin-top: 2px; font-style: italic; }
         .name-card-url { font-size: 0.45rem; color: #8b7355; text-align: center; margin-top: 4px; letter-spacing: 0.05em; }
         .name-card-latin { color: #4a3728 !important; }
-        .name-card-zodiac { position: absolute; font-size: 0.85rem; opacity: 0.88; }
-        .name-card-zodiac-tl { top: 6px; left: 8px; }
-        .name-card-zodiac-tr { top: 6px; right: 8px; }
-        .name-card-zodiac-bl { bottom: 6px; left: 8px; }
-        .name-card-zodiac-br { bottom: 6px; right: 8px; }
-        /* 印章：15mm 方形，白底红字，名字横排，本名在下小字，标注尺寸。三种风格用三种主流中文字体区分 */
+        .name-card-zodiac { font-size: 1.1rem; text-align: center; margin-top: 4px; }
+        /* 印章：20mm 方形，白底红字，名字横排，本名在下小字，标注尺寸。三种风格用三种主流中文字体区分 */
         .seal-preview {
-            width: 56px; height: 56px;
+            width: 72px; height: 72px;
             background: #fff;
             color: #b91c1c;
             border: 2px solid #b91c1c;
@@ -83,8 +69,8 @@
         .seal-preview.seal-font-kai { font-family: 'ZCOOL XiaoWei', 'KaiTi', 'STKaiti', '楷体', serif; }
         .seal-preview.seal-font-song { font-family: 'Noto Serif SC', 'SimSun', '宋体', 'STSong', serif; }
         .seal-preview.seal-font-li { font-family: 'Long Cang', 'LiSu', '隶书', 'STLiti', cursive; }
-        .seal-preview .seal-name-row { font-size: 0.95rem; line-height: 1.2; white-space: nowrap; }
-        .seal-preview .seal-latin-row { font-size: 0.5rem; color: #991b1b; margin-top: 2px; font-weight: normal; }
+        .seal-preview .seal-name-row { font-size: 1.05rem; line-height: 1.2; white-space: nowrap; }
+        .seal-preview .seal-latin-row { font-size: 0.55rem; color: #991b1b; margin-top: 2px; font-weight: normal; }
         .seal-size-outer { font-size: 0.4rem; color: #9ca3af; margin-top: 2px; display: block; text-align: center; }
     </style>
 </head>
@@ -126,15 +112,12 @@
                     <p class="text-xs text-gray-500 mb-1.5 text-center w-full">Your Chinese-style name card</p>
                     <div id="nameCardEl" class="name-card-wrap scale-90 origin-top">
                         <div id="nameCardName" class="name-card-name"></div>
+                        <div id="nameCardZodiacCenter" class="name-card-zodiac"></div>
                         <div id="nameCardLatin" class="name-card-latin text-center text-gray-600 text-sm mt-1"></div>
                         <div class="name-card-divider"></div>
                         <p class="name-card-brand">印刻 INKUL</p>
                         <p class="name-card-slogan">Every soul deserves a Chinese name.</p>
                         <p class="name-card-url">https://inkul.name</p>
-                        <div id="nameCardZodiacTL" class="name-card-zodiac name-card-zodiac-tl"></div>
-                        <div id="nameCardZodiacTR" class="name-card-zodiac name-card-zodiac-tr"></div>
-                        <div id="nameCardZodiacBL" class="name-card-zodiac name-card-zodiac-bl"></div>
-                        <div id="nameCardZodiacBR" class="name-card-zodiac name-card-zodiac-br"></div>
                     </div>
                     <button type="button" onclick="downloadNameCard()" class="mt-1 w-full py-1.5 rounded-lg border-2 border-red-700 text-red-700 font-bold text-xs hover:bg-red-50 transition-colors">
                         Download as image
@@ -159,22 +142,22 @@
                 <div id="sealSection" class="hidden">
                     <div class="p-3 rounded-xl border-2 border-red-100 bg-white/80">
                         <p class="text-xs font-bold text-gray-800 mb-1.5">Choose your seal design</p>
-                        <p class="text-xs text-gray-500 mb-2">15mm square, we ship from China.</p>
+                        <p class="text-xs text-gray-500 mb-2">20mm square, we ship from China.</p>
                         <div id="sealChoices" class="grid grid-cols-3 gap-2 mb-3">
                             <button type="button" data-seal="0" class="seal-option border-2 border-transparent rounded-lg p-1.5 hover:border-red-500 transition-all flex flex-col items-center" onclick="selectSeal(0)">
                                 <div class="seal-preview seal-font-kai"></div>
                                 <span class="text-[10px] mt-1 block text-center">A 楷体</span>
-                                <span class="seal-size-outer">15×15mm</span>
+                                <span class="seal-size-outer">20×20mm</span>
                             </button>
                             <button type="button" data-seal="1" class="seal-option border-2 border-transparent rounded-lg p-1.5 hover:border-red-500 transition-all flex flex-col items-center" onclick="selectSeal(1)">
                                 <div class="seal-preview seal-font-song"></div>
                                 <span class="text-[10px] mt-1 block text-center">B 宋体</span>
-                                <span class="seal-size-outer">15×15mm</span>
+                                <span class="seal-size-outer">20×20mm</span>
                             </button>
                             <button type="button" data-seal="2" class="seal-option border-2 border-transparent rounded-lg p-1.5 hover:border-red-500 transition-all flex flex-col items-center" onclick="selectSeal(2)">
                                 <div class="seal-preview seal-font-li"></div>
                                 <span class="text-[10px] mt-1 block text-center">C 隶书</span>
-                                <span class="seal-size-outer">15×15mm</span>
+                                <span class="seal-size-outer">20×20mm</span>
                             </button>
                         </div>
                         <p id="sealSelectedHint" class="text-xs text-amber-700 mb-2 hidden">Selected: Style <span id="sealSelectedLabel"></span></p>
@@ -240,6 +223,20 @@
                 <button type="button" onclick="playStrokeOrder()" class="px-4 py-2 rounded-lg bg-red-700 text-white text-sm font-bold">Play stroke order</button>
                 <button type="button" onclick="playPronunciation()" class="px-4 py-2 rounded-lg border-2 border-red-700 text-red-700 text-sm font-bold">Play pronunciation</button>
             </div>
+        </div>
+    </div>
+
+    <!-- 印章放大预览弹层 -->
+    <div id="sealZoomModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 hidden">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-xs w-full max-h-[80vh] overflow-y-auto p-5">
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="text-sm font-bold text-gray-800">Seal preview</h3>
+                <button type="button" onclick="closeSealZoom()" class="text-gray-400 hover:text-gray-600 text-xl leading-none">&times;</button>
+            </div>
+            <div class="flex justify-center items-center py-3">
+                <div id="sealZoomBox" class="seal-preview" style="width: 120px; height: 120px;"></div>
+            </div>
+            <p id="sealZoomLabel" class="mt-2 text-center text-xs text-gray-500"></p>
         </div>
     </div>
 
@@ -318,23 +315,20 @@
             latinEl.innerText = latin || '';
             latinEl.style.display = latin ? 'block' : 'none';
 
-            // 根据出生年份计算生肖，在名片四角展示图案
+            // 根据出生年份计算生肖，在中文名与英文名之间展示图案（仅图标，不显示汉字）
             var birth = document.getElementById('birthDate') ? document.getElementById('birthDate').value : '';
             var zodiacChar = '';
             if (birth && birth.length >= 4) {
                 var year = parseInt(birth.slice(0, 4), 10);
                 if (!isNaN(year)) {
-                    var animals = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
                     var emojis =  ['🐭','🐮','🐯','🐰','🐲','🐍','🐴','🐑','🐒','🐔','🐶','🐷'];
                     var idx = (year - 4) % 12;
                     if (idx < 0) idx += 12;
-                    zodiacChar = emojis[idx] + ' ' + animals[idx];
+                    zodiacChar = emojis[idx];
                 }
             }
-            ['TL','TR','BL','BR'].forEach(function(pos) {
-                var el = document.getElementById('nameCardZodiac' + pos);
-                if (el) el.textContent = zodiacChar || '';
-            });
+            var zc = document.getElementById('nameCardZodiacCenter');
+            if (zc) zc.textContent = zodiacChar || '';
         }
 
         function downloadNameCard() {
@@ -495,6 +489,29 @@
             var labels = ['A', 'B', 'C'];
             document.getElementById('sealSelectedLabel').textContent = labels[i];
             document.getElementById('sealSelectedHint').classList.remove('hidden');
+            openSealZoom(i);
+        }
+        function openSealZoom(i) {
+            var modal = document.getElementById('sealZoomModal');
+            var box = document.getElementById('sealZoomBox');
+            if (!modal || !box) return;
+            var name = window.currentChineseName || extractNameOnly(document.getElementById('resultText').innerText.trim());
+            if (!name) return;
+            var latin = document.getElementById('customerName').value.trim();
+            var html = '<span class="seal-name-row">' + name + '</span>';
+            if (latin) html += '<span class="seal-latin-row">' + latin + '</span>';
+            box.innerHTML = html;
+            box.classList.remove('seal-font-kai','seal-font-song','seal-font-li');
+            if (i === 0) box.classList.add('seal-font-kai');
+            if (i === 1) box.classList.add('seal-font-song');
+            if (i === 2) box.classList.add('seal-font-li');
+            var styleLabels = ['Style A · 楷体','Style B · 宋体','Style C · 隶书'];
+            document.getElementById('sealZoomLabel').textContent = (styleLabels[i] || '') + ' · 20×20mm';
+            modal.classList.remove('hidden');
+        }
+        function closeSealZoom() {
+            var modal = document.getElementById('sealZoomModal');
+            if (modal) modal.classList.add('hidden');
         }
         function openSealCheckout() {
             if (selectedSealIndex < 0) return;

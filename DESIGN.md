@@ -19,16 +19,23 @@
    - 支付成功后通过 return_url 回到本站 `?paid=1&name=xxx`，弹层内为：**Hanzi Writer** 笔顺动画 + 浏览器 **TTS 读音**（中文）。  
    - 需在 Vercel 配置 **AIRWALLEX_CLIENT_ID**、**AIRWALLEX_API_KEY**；沙箱可设 **AIRWALLEX_BASE_URL=https://api-demo.airwallex.com**。未配置时点击会直接打开演示弹层。
 
-4. **印章图案**（待开发）  
-   - 根据中文名生成多种字体/风格的印章图案（如篆书、隶书等）。  
-   - 用户选择一种款式。
+4. **印章图案**（已接）  
+   - 取名后展示 3 款印章样式（Style A/B/C），用户选一款 → 填写收件地址 → 支付 $29.90（Airwallex）。  
+   - 支付成功后跳回 `?order_id=xxx&paid=1`，展示 Thank you。  
+   - **订单通知**：创建订单时发邮件到 **ORDER_NOTIFY_EMAIL**（如 huhanxing@gmail.com），需配置 **RESEND_API_KEY**。  
+   - 后续：回填物流单号、客户查件。
 
-5. **实物邮寄**（可选增值）  
-   - 从中国寄出：  
-     - 选定款式的**实物印章**  
-     - **毛笔**  
-     - **练习用纸**  
-   - 需：地址收集、物流、库存/供应链或代发方案。
+5. **实物邮寄**  
+   - 从中国寄出：选定款式的实物印章（+ 可选毛笔、练习用纸）。  
+   - 需：制作、回填单号、客户跟踪。
+
+---
+
+## 订单通知（收到订单后提示）
+
+- **收件邮箱**：`huhanxing@gmail.com`  
+- 实现方式：支付成功 Webhook（或成功回调）→ 存订单 → 发邮件到该邮箱。  
+- 环境变量建议：**ORDER_NOTIFY_EMAIL**（Vercel 中可设为上述邮箱，便于更换）。
 
 ---
 

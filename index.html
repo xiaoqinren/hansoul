@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HANSOUL | Discover Your Chinese Identity</title>
+    <title>INKUL | Discover Your Chinese Identity</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;900&display=swap');
         
@@ -28,13 +29,38 @@
             transform: translateY(-2px);
             box-shadow: 0 10px 20px rgba(185, 28, 28, 0.2);
         }
+        /* 中国风名片 */
+        .name-card-wrap {
+            background: linear-gradient(135deg, #fef8f0 0%, #fce8e0 100%);
+            border: 3px solid #b91c1c;
+            box-shadow: inset 0 0 0 1px #c2410c, 0 4px 12px rgba(0,0,0,0.15);
+            width: 320px;
+            min-height: 200px;
+            margin: 0 auto;
+            padding: 24px 20px;
+            position: relative;
+        }
+        .name-card-wrap::before, .name-card-wrap::after {
+            content: '';
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border: 2px solid #b91c1c;
+            top: 8px;
+        }
+        .name-card-wrap::before { left: 8px; }
+        .name-card-wrap::after { right: 8px; border-left: none; }
+        .name-card-name { font-family: 'Ma Shan Zheng', 'Noto Serif SC', serif; font-size: 2.5rem; color: #1a1a1a; line-height: 1.4; text-align: center; margin-bottom: 12px; }
+        .name-card-divider { width: 60px; height: 2px; background: #b91c1c; margin: 12px auto; }
+        .name-card-brand { font-family: 'Noto Serif SC', serif; font-size: 0.75rem; color: #7f1d1d; letter-spacing: 0.2em; text-align: center; }
+        .name-card-slogan { font-size: 0.65rem; color: #991b1b; opacity: 0.9; text-align: center; margin-top: 4px; font-style: italic; }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
     <div class="max-w-md w-full glass rounded-3xl shadow-2xl overflow-hidden border-t-8 border-red-700 p-8">
         <header class="text-center mb-8">
-            <h1 class="ink-title text-6xl text-red-700 mb-2">汉魂</h1>
-            <h2 class="text-2xl font-black tracking-widest text-gray-800">HANSOUL</h2>
+            <h1 class="ink-title text-6xl text-red-700 mb-2">印刻</h1>
+            <h2 class="text-2xl font-black tracking-widest text-gray-800">INKUL</h2>
             <p class="text-gray-500 italic mt-2">Every soul deserves a Chinese name.</p>
         </header>
 
@@ -56,11 +82,51 @@
                     <span class="mr-2 italic">Your Chinese Soul Name:</span>
                 </h3>
                 <div id="resultText" class="text-gray-800 leading-relaxed text-lg"></div>
+                <!-- 生成中国风名片 -->
+                <div id="nameCardSection" class="mt-4 hidden">
+                    <button type="button" onclick="showNameCard()" class="btn-ink w-full py-3 rounded-xl text-white font-bold text-sm tracking-widest">
+                        GET MY NAME CARD
+                    </button>
+                    <div id="nameCardContainer" class="hidden mt-4">
+                        <p class="text-xs text-gray-500 mb-2 text-center">Your Chinese-style name card</p>
+                        <div id="nameCardEl" class="name-card-wrap">
+                            <div id="nameCardName" class="name-card-name"></div>
+                            <div class="name-card-divider"></div>
+                            <p class="name-card-brand">印刻 INKUL</p>
+                            <p class="name-card-slogan">Every soul deserves a Chinese name.</p>
+                        </div>
+                        <button type="button" onclick="downloadNameCard()" class="mt-3 w-full py-2 rounded-lg border-2 border-red-700 text-red-700 font-bold text-sm hover:bg-red-50 transition-colors">
+                            Download as image
+                        </button>
+                    </div>
+                </div>
+                <!-- 取名后的完整旅程 -->
+                <div id="journeyArea" class="mt-6 pt-6 border-t border-red-200">
+                    <p class="text-sm font-bold text-gray-700 mb-3 uppercase tracking-wider">Your journey with INKUL</p>
+                    <ol class="space-y-3 text-sm text-gray-600">
+                        <li class="flex items-start gap-2">
+                            <span class="flex-shrink-0 w-5 h-5 rounded-full bg-red-100 text-red-700 flex items-center justify-center text-xs font-bold">1</span>
+                            <span><strong class="text-gray-800">Name card</strong> — We’ll generate a Chinese-style name card for you.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="flex-shrink-0 w-5 h-5 rounded-full bg-red-100 text-red-700 flex items-center justify-center text-xs font-bold">2</span>
+                            <span><strong class="text-gray-800">Stroke-order video</strong> — Learn how to write your name. <em class="text-red-600">(Paid)</em></span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="flex-shrink-0 w-5 h-5 rounded-full bg-red-100 text-red-700 flex items-center justify-center text-xs font-bold">3</span>
+                            <span><strong class="text-gray-800">Seal design</strong> — Choose from several traditional seal patterns; we can ship the physical seal from China.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="flex-shrink-0 w-5 h-5 rounded-full bg-red-100 text-red-700 flex items-center justify-center text-xs font-bold">4</span>
+                            <span><strong class="text-gray-800">Physical kit</strong> — Optional: brush, practice paper, and your seal delivered to your door.</span>
+                        </li>
+                    </ol>
+                </div>
             </div>
         </div>
 
         <footer class="mt-12 text-center text-xs text-gray-400 tracking-widest uppercase">
-            &copy; 2026 Hansoul Studio · Inheriting Culture
+            &copy; 2026 INKUL · Inheriting Culture
         </footer>
     </div>
 
@@ -89,6 +155,7 @@
                     resultText.innerText = "Error: " + (data.error || "Unknown response");
                 }
                 resultArea.classList.remove('hidden');
+                if (data.text) document.getElementById('nameCardSection').classList.remove('hidden');
             } catch (e) {
                 resultText.innerText = "The connection is weak. Please try again.";
                 resultArea.classList.remove('hidden');
@@ -96,6 +163,33 @@
                 btn.innerText = "Reveal My Name";
                 btn.disabled = false;
             }
+        }
+
+        function showNameCard() {
+            var nameText = document.getElementById('resultText').innerText.trim();
+            if (!nameText) return;
+            document.getElementById('nameCardName').innerText = nameText;
+            document.getElementById('nameCardContainer').classList.remove('hidden');
+        }
+
+        function downloadNameCard() {
+            var el = document.getElementById('nameCardEl');
+            if (!el) return;
+            if (typeof html2canvas === 'undefined') {
+                alert('Download not available. Try again after the page loads.');
+                return;
+            }
+            html2canvas(el, {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: null,
+                logging: false
+            }).then(function(canvas) {
+                var link = document.createElement('a');
+                link.download = 'inkul-name-card.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
         }
     </script>
 </body>

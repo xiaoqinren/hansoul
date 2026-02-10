@@ -10,6 +10,7 @@ export default async function handler(req, res) {
 
     const API_KEY = "sk-fc3a51f125254fbab1477c0fa25b0cf8";
     const APP_ID = "2ad8881cc5a5492b9636afd2832fe4e3";
+    // Vercel 部署在美国，用国内 endpoint 可能被拒。若仍报 Invalid API-key，在 Vercel 设 DASHSCOPE_BASE_URL=https://dashscope-intl.aliyuncs.com 试国际版（需国际版账号的 Key）
     const BASE_URL = process.env.DASHSCOPE_BASE_URL || "https://dashscope.aliyuncs.com";
 
     if (!API_KEY || !API_KEY.startsWith("sk-")) {
@@ -28,8 +29,7 @@ export default async function handler(req, res) {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${API_KEY}`,
-                'Content-Type': 'application/json',
-                'X-DashScope-AppId': APP_ID
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 input: { prompt: typeof prompt === 'string' ? prompt.trim() : String(prompt) },

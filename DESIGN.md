@@ -14,9 +14,10 @@
    - 取名完成后，为用户生成一张中国风电子/可下载名片（含中文名、可选用书法风格等）。  
    - 可作为免费环节或首步增值。
 
-3. **笔顺视频**（付费）  
-   - 根据用户的中文名，生成「写名字」的笔顺示范视频。  
-   - **收费项**：需接入支付（如 Stripe / 支付宝等）与视频生成/存储。
+3. **笔顺视频**（付费）✅ 已接  
+   - 取名后展示「Stroke-order & pronunciation」$9.90，点击跳转 **Airwallex** 支付链接。  
+   - 支付成功后通过 return_url 回到本站 `?paid=1&name=xxx`，弹层内为：**Hanzi Writer** 笔顺动画 + 浏览器 **TTS 读音**（中文）。  
+   - 需在 Vercel 配置 **AIRWALLEX_CLIENT_ID**、**AIRWALLEX_API_KEY**；沙箱可设 **AIRWALLEX_BASE_URL=https://api-demo.airwallex.com**。未配置时点击会直接打开演示弹层。
 
 4. **印章图案**（待开发）  
    - 根据中文名生成多种字体/风格的印章图案（如篆书、隶书等）。  

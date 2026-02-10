@@ -6,6 +6,7 @@
     <title>INKUL | Discover Your Chinese Identity</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5/dist/hanzi-writer.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;900&display=swap');
         
@@ -29,16 +30,19 @@
             transform: translateY(-2px);
             box-shadow: 0 10px 20px rgba(185, 28, 28, 0.2);
         }
-        /* 中国风名片 */
+        /* 中国风名片：手机居中、不溢出 */
         .name-card-wrap {
             background: linear-gradient(135deg, #fef8f0 0%, #fce8e0 100%);
             border: 3px solid #b91c1c;
             box-shadow: inset 0 0 0 1px #c2410c, 0 4px 12px rgba(0,0,0,0.15);
-            width: 320px;
+            width: 100%;
+            max-width: 320px;
             min-height: 200px;
-            margin: 0 auto;
+            margin-left: auto;
+            margin-right: auto;
             padding: 24px 20px;
             position: relative;
+            box-sizing: border-box;
         }
         .name-card-wrap::before, .name-card-wrap::after {
             content: '';
@@ -77,6 +81,9 @@
                 class="btn-ink w-full py-4 rounded-xl text-white font-bold text-lg tracking-widest">
                 REVEAL MY IDENTITY
             </button>
+            <p id="generateHint" class="hidden mt-2 text-center text-sm text-amber-700">
+                Please wait, don’t close the page. <span id="generateCountdown" class="font-bold">30s</span>
+            </p>
 
             <div id="resultArea" class="hidden mt-8 p-6 bg-red-50 rounded-2xl border-l-4 border-red-700 animate-fade-in">
                 <h3 class="text-red-800 font-bold mb-2 flex items-center">
@@ -88,8 +95,8 @@
                     <button type="button" onclick="showNameCard()" class="btn-ink w-full py-3 rounded-xl text-white font-bold text-sm tracking-widest">
                         GET MY NAME CARD
                     </button>
-                    <div id="nameCardContainer" class="hidden mt-4">
-                        <p class="text-xs text-gray-500 mb-2 text-center">Your Chinese-style name card</p>
+                    <div id="nameCardContainer" class="hidden mt-4 flex flex-col items-center">
+                        <p class="text-xs text-gray-500 mb-2 text-center w-full">Your Chinese-style name card</p>
                         <div id="nameCardEl" class="name-card-wrap">
                             <div id="nameCardName" class="name-card-name"></div>
                             <div class="name-card-divider"></div>
@@ -98,6 +105,17 @@
                         </div>
                         <button type="button" onclick="downloadNameCard()" class="mt-3 w-full py-2 rounded-lg border-2 border-red-700 text-red-700 font-bold text-sm hover:bg-red-50 transition-colors">
                             Download as image
+                        </button>
+                    </div>
+                </div>
+                <!-- 付费：笔顺 + 读音视频 -->
+                <div id="videoSection" class="mt-4 hidden">
+                    <div class="p-4 rounded-2xl border-2 border-amber-200 bg-amber-50/80">
+                        <p class="text-sm font-bold text-amber-900 mb-1">Stroke-order & pronunciation</p>
+                        <p class="text-xs text-amber-800 mb-3">Learn how to write and say your name.</p>
+                        <p class="text-lg font-black text-red-700 mb-3">$9.90</p>
+                        <button type="button" id="btnPurchaseVideo" onclick="purchaseVideo()" class="btn-ink w-full py-3 rounded-xl text-white font-bold text-sm tracking-widest">
+                            PURCHASE VIDEO
                         </button>
                     </div>
                 </div>
@@ -131,6 +149,22 @@
         </footer>
     </div>
 
+    <!-- 笔顺 + 读音 弹层 -->
+    <div id="videoModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 hidden">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold text-gray-800">Stroke order & pronunciation</h3>
+                <button type="button" onclick="closeVideoModal()" class="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
+            </div>
+            <p id="videoModalName" class="text-center text-red-700 font-bold text-xl mb-2"></p>
+            <div id="strokeOrderContainer" class="flex flex-wrap justify-center gap-4 my-6 min-h-[120px]"></div>
+            <div class="flex justify-center gap-2">
+                <button type="button" onclick="playStrokeOrder()" class="px-4 py-2 rounded-lg bg-red-700 text-white text-sm font-bold">Play stroke order</button>
+                <button type="button" onclick="playPronunciation()" class="px-4 py-2 rounded-lg border-2 border-red-700 text-red-700 text-sm font-bold">Play pronunciation</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         async function generateName() {
             const story = document.getElementById('userStory').value;
@@ -141,6 +175,16 @@
 
             btn.innerText = "Consulting the Ancients...";
             btn.disabled = true;
+            var hintEl = document.getElementById('generateHint');
+            var countdownEl = document.getElementById('generateCountdown');
+            hintEl.classList.remove('hidden');
+            var sec = 30;
+            countdownEl.textContent = sec + 's';
+            var countdownTimer = setInterval(function() {
+                sec--;
+                if (sec >= 0) countdownEl.textContent = sec + 's';
+                if (sec <= 0) clearInterval(countdownTimer);
+            }, 1000);
 
             try {
                 // 请求 Vercel 后端接口，避开浏览器跨域拦截
@@ -156,13 +200,19 @@
                     resultText.innerText = "Error: " + (data.error || "Unknown response");
                 }
                 resultArea.classList.remove('hidden');
-                if (data.text) document.getElementById('nameCardSection').classList.remove('hidden');
+                if (data.text) {
+                    document.getElementById('nameCardSection').classList.remove('hidden');
+                    document.getElementById('videoSection').classList.remove('hidden');
+                    window.currentChineseName = extractNameOnly(data.text);
+                }
             } catch (e) {
                 resultText.innerText = "The connection is weak. Please try again.";
                 resultArea.classList.remove('hidden');
             } finally {
-                btn.innerText = "Reveal My Name";
+                if (typeof countdownTimer !== 'undefined') clearInterval(countdownTimer);
+                btn.innerText = "REVEAL MY IDENTITY";
                 btn.disabled = false;
+                document.getElementById('generateHint').classList.add('hidden');
             }
         }
 
@@ -204,6 +254,90 @@
                 link.click();
             });
         }
+
+        var strokeWriters = [];
+        function openVideoModal(name) {
+            if (!name || !name.trim()) return;
+            var modal = document.getElementById('videoModal');
+            var container = document.getElementById('strokeOrderContainer');
+            var nameEl = document.getElementById('videoModalName');
+            nameEl.textContent = name;
+            container.innerHTML = '';
+            strokeWriters = [];
+            if (typeof HanziWriter !== 'undefined') {
+                for (var i = 0; i < name.length; i++) {
+                    var c = name[i];
+                    if (!/[\u4e00-\u9fff]/.test(c)) continue;
+                    var div = document.createElement('div');
+                    div.id = 'stroke-char-' + i;
+                    div.className = 'inline-block';
+                    container.appendChild(div);
+                    try {
+                        var w = HanziWriter.create(div.id, c, {
+                            width: 80,
+                            height: 80,
+                            padding: 5,
+                            showOutline: true,
+                            strokeAnimationSpeed: 1.2,
+                            delayBetweenStrokes: 400
+                        });
+                        strokeWriters.push(w);
+                    } catch (e) { console.warn('HanziWriter skip char:', c, e); }
+                }
+            }
+            modal.classList.remove('hidden');
+        }
+        function closeVideoModal() {
+            document.getElementById('videoModal').classList.add('hidden');
+        }
+        function playStrokeOrder() {
+            if (!strokeWriters.length) return;
+            var i = 0;
+            function next() {
+                if (i >= strokeWriters.length) return;
+                strokeWriters[i].animateCharacter().then(function() { i++; next(); });
+            }
+            next();
+        }
+        function playPronunciation() {
+            var name = document.getElementById('videoModalName').textContent;
+            if (!name) return;
+            if (!window.speechSynthesis) { alert('Pronunciation not supported in this browser.'); return; }
+            var u = new SpeechSynthesisUtterance(name);
+            u.lang = 'zh-CN';
+            u.rate = 0.9;
+            window.speechSynthesis.cancel();
+            window.speechSynthesis.speak(u);
+        }
+        async function purchaseVideo() {
+            var name = window.currentChineseName || extractNameOnly(document.getElementById('resultText').innerText.trim());
+            if (!name) return alert('Get your Chinese name first.');
+            var btn = document.getElementById('btnPurchaseVideo');
+            btn.disabled = true;
+            btn.textContent = 'Processing...';
+            try {
+                var res = await fetch('/api/create-checkout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: name })
+                });
+                var data = await res.json();
+                if (data.url) {
+                    window.location.href = data.url;
+                    return;
+                }
+            } catch (e) { console.warn(e); }
+            btn.disabled = false;
+            btn.textContent = 'PURCHASE VIDEO';
+            openVideoModal(name);
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            var params = new URLSearchParams(window.location.search);
+            if (params.get('paid') === '1' && params.get('name')) {
+                var name = decodeURIComponent(params.get('name'));
+                openVideoModal(name);
+            }
+        });
     </script>
 </body>
 </html>

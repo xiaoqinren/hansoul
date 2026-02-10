@@ -8,7 +8,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5/dist/hanzi-writer.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;900&family=ZCOOL+XiaoWei&family=Long+Cang&display=swap');
         
         body {
             background-color: #f9f8f4;
@@ -74,15 +74,13 @@
             padding: 4px;
             box-sizing: border-box;
         }
-        /* Style A：楷体 — 端庄易读、传统楷书 */
-        .seal-preview.seal-font-kai { font-family: 'KaiTi', 'STKaiti', '楷体', 'SimKai', serif; }
-        /* Style B：宋体 — 印刷体、横细竖粗、正式 */
-        .seal-preview.seal-font-song { font-family: 'SimSun', '宋体', 'Song', 'STSong', serif; }
-        /* Style C：隶书 — 古朴、隶变风格 */
-        .seal-preview.seal-font-li { font-family: 'LiSu', '隶书', 'STLiti', serif; }
+        /* 印章三款字体：用 Web 字体保证手机/跨平台显示不同（系统字体仅作 fallback） */
+        .seal-preview.seal-font-kai { font-family: 'ZCOOL XiaoWei', 'KaiTi', 'STKaiti', '楷体', serif; }
+        .seal-preview.seal-font-song { font-family: 'Noto Serif SC', 'SimSun', '宋体', 'STSong', serif; }
+        .seal-preview.seal-font-li { font-family: 'Long Cang', 'LiSu', '隶书', 'STLiti', cursive; }
         .seal-preview .seal-name-row { font-size: 0.95rem; line-height: 1.2; white-space: nowrap; }
         .seal-preview .seal-latin-row { font-size: 0.5rem; color: #991b1b; margin-top: 2px; font-weight: normal; }
-        .seal-preview .seal-size-label { font-size: 0.4rem; color: #9ca3af; margin-top: 2px; font-weight: normal; }
+        .seal-size-outer { font-size: 0.4rem; color: #9ca3af; margin-top: 2px; display: block; text-align: center; }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-3 sm:p-4">
@@ -128,6 +126,16 @@
                     <button type="button" onclick="downloadNameCard()" class="mt-2 w-full py-1.5 rounded-lg border-2 border-red-700 text-red-700 font-bold text-xs hover:bg-red-50 transition-colors">
                         Download as image
                     </button>
+                    <!-- 笔顺与读音：紧接在 download 下方 -->
+                    <div id="videoSection" class="hidden mt-3 w-full">
+                        <div class="p-3 rounded-xl border-2 border-amber-200 bg-amber-50/80">
+                            <p class="text-xs font-bold text-amber-900 mb-0.5">Stroke-order & pronunciation</p>
+                            <p class="text-xs text-amber-800 mb-2">$9.90</p>
+                            <button type="button" id="btnPurchaseVideo" onclick="purchaseVideo()" class="btn-ink w-full py-2.5 rounded-xl text-white font-bold text-xs tracking-widest">
+                                PURCHASE VIDEO
+                            </button>
+                        </div>
+                    </div>
                 </div>
                 <h3 class="text-red-800 font-bold mb-1.5 text-sm flex items-center">
                     <span class="mr-2 italic">Your Chinese Soul Name:</span>
@@ -143,29 +151,22 @@
                             <button type="button" data-seal="0" class="seal-option border-2 border-transparent rounded-lg p-1.5 hover:border-red-500 transition-all flex flex-col items-center" onclick="selectSeal(0)">
                                 <div class="seal-preview seal-font-kai"></div>
                                 <span class="text-[10px] mt-1 block text-center">A 楷体</span>
+                                <span class="seal-size-outer">15×15mm</span>
                             </button>
                             <button type="button" data-seal="1" class="seal-option border-2 border-transparent rounded-lg p-1.5 hover:border-red-500 transition-all flex flex-col items-center" onclick="selectSeal(1)">
                                 <div class="seal-preview seal-font-song"></div>
                                 <span class="text-[10px] mt-1 block text-center">B 宋体</span>
+                                <span class="seal-size-outer">15×15mm</span>
                             </button>
                             <button type="button" data-seal="2" class="seal-option border-2 border-transparent rounded-lg p-1.5 hover:border-red-500 transition-all flex flex-col items-center" onclick="selectSeal(2)">
                                 <div class="seal-preview seal-font-li"></div>
                                 <span class="text-[10px] mt-1 block text-center">C 隶书</span>
+                                <span class="seal-size-outer">15×15mm</span>
                             </button>
                         </div>
                         <p id="sealSelectedHint" class="text-xs text-amber-700 mb-2 hidden">Selected: Style <span id="sealSelectedLabel"></span></p>
                         <button type="button" id="btnSealCheckout" onclick="openSealCheckout()" class="btn-ink w-full py-2.5 rounded-xl text-white font-bold text-xs tracking-widest" disabled>
                             PROCEED TO CHECKOUT
-                        </button>
-                    </div>
-                </div>
-                <!-- 付费：笔顺 + 读音视频 -->
-                <div id="videoSection" class="hidden">
-                    <div class="p-3 rounded-xl border-2 border-amber-200 bg-amber-50/80">
-                        <p class="text-xs font-bold text-amber-900 mb-0.5">Stroke-order & pronunciation</p>
-                        <p class="text-xs text-amber-800 mb-2">$9.90</p>
-                        <button type="button" id="btnPurchaseVideo" onclick="purchaseVideo()" class="btn-ink w-full py-2.5 rounded-xl text-white font-bold text-xs tracking-widest">
-                            PURCHASE VIDEO
                         </button>
                     </div>
                 </div>
@@ -408,7 +409,6 @@
             for (var i = 0; i < previews.length; i++) {
                 var html = '<span class="seal-name-row">' + name + '</span>';
                 if (latin) html += '<span class="seal-latin-row">' + latin + '</span>';
-                html += '<span class="seal-size-label">15×15mm</span>';
                 previews[i].innerHTML = html;
             }
         }

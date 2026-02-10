@@ -115,33 +115,26 @@
             </p>
 
             <div id="resultArea" class="hidden mt-5 p-4 bg-red-50 rounded-2xl border-l-4 border-red-700 animate-fade-in">
+                <!-- 名片：与结果同时呈现，放在最上方 -->
+                <div id="nameCardSection" class="hidden flex flex-col items-center mb-4">
+                    <p class="text-xs text-gray-500 mb-1.5 text-center w-full">Your Chinese-style name card</p>
+                    <div id="nameCardEl" class="name-card-wrap scale-90 origin-top">
+                        <div id="nameCardName" class="name-card-name"></div>
+                        <div id="nameCardLatin" class="name-card-latin text-center text-gray-600 text-sm mt-1"></div>
+                        <div class="name-card-divider"></div>
+                        <p class="name-card-brand">印刻 INKUL</p>
+                        <p class="name-card-slogan">Every soul deserves a Chinese name.</p>
+                    </div>
+                    <button type="button" onclick="downloadNameCard()" class="mt-2 w-full py-1.5 rounded-lg border-2 border-red-700 text-red-700 font-bold text-xs hover:bg-red-50 transition-colors">
+                        Download as image
+                    </button>
+                </div>
                 <h3 class="text-red-800 font-bold mb-1.5 text-sm flex items-center">
                     <span class="mr-2 italic">Your Chinese Soul Name:</span>
                 </h3>
                 <div id="resultText" class="text-gray-800 leading-relaxed text-base"></div>
-                <!-- 结果区：名片 | 印章+视频 并排，小屏上下 -->
-                <div class="result-grid mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
-                <!-- 生成中国风名片 -->
-                <div id="nameCardSection" class="hidden">
-                    <button type="button" onclick="showNameCard()" class="btn-ink w-full py-2.5 rounded-xl text-white font-bold text-xs tracking-widest">
-                        GET MY NAME CARD
-                    </button>
-                    <div id="nameCardContainer" class="hidden mt-3 flex flex-col items-center">
-                        <p class="text-xs text-gray-500 mb-1.5 text-center w-full">Your Chinese-style name card</p>
-                        <div id="nameCardEl" class="name-card-wrap scale-90 origin-top">
-                            <div id="nameCardName" class="name-card-name"></div>
-                            <div id="nameCardLatin" class="name-card-latin text-center text-gray-600 text-sm mt-1"></div>
-                            <div class="name-card-divider"></div>
-                            <p class="name-card-brand">印刻 INKUL</p>
-                            <p class="name-card-slogan">Every soul deserves a Chinese name.</p>
-                        </div>
-                        <button type="button" onclick="downloadNameCard()" class="mt-2 w-full py-1.5 rounded-lg border-2 border-red-700 text-red-700 font-bold text-xs hover:bg-red-50 transition-colors">
-                            Download as image
-                        </button>
-                    </div>
-                </div>
                 <!-- 印章选款 + 视频 -->
-                <div class="space-y-3">
+                <div class="mt-3 space-y-3">
                 <div id="sealSection" class="hidden">
                     <div class="p-3 rounded-xl border-2 border-red-100 bg-white/80">
                         <p class="text-xs font-bold text-gray-800 mb-1.5">Choose your seal design</p>
@@ -175,7 +168,6 @@
                             PURCHASE VIDEO
                         </button>
                     </div>
-                </div>
                 </div>
                 </div>
                 <div id="sealAddressModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 hidden">
@@ -273,6 +265,7 @@
                 resultArea.classList.remove('hidden');
                 if (data.text) {
                     document.getElementById('nameCardSection').classList.remove('hidden');
+                    showNameCard();
                     document.getElementById('videoSection').classList.remove('hidden');
                     document.getElementById('sealSection').classList.remove('hidden');
                     window.currentChineseName = extractNameOnly(data.text);
@@ -309,7 +302,6 @@
             var latinEl = document.getElementById('nameCardLatin');
             latinEl.innerText = latin || '';
             latinEl.style.display = latin ? 'block' : 'none';
-            document.getElementById('nameCardContainer').classList.remove('hidden');
         }
 
         function downloadNameCard() {

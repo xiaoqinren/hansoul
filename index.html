@@ -59,6 +59,25 @@
         .name-card-divider { width: 60px; height: 2px; background: #b91c1c; margin: 12px auto; }
         .name-card-brand { font-family: 'Noto Serif SC', serif; font-size: 0.75rem; color: #7f1d1d; letter-spacing: 0.2em; text-align: center; }
         .name-card-slogan { font-size: 0.65rem; color: #991b1b; opacity: 0.9; text-align: center; margin-top: 4px; font-style: italic; }
+        /* 印章：15mm 方形，白底红字，名字横排，本名在下小字，标注尺寸 */
+        .seal-preview {
+            width: 56px; height: 56px;
+            background: #fff;
+            color: #b91c1c;
+            border: 2px solid #b91c1c;
+            border-radius: 2px;
+            font-family: 'Ma Shan Zheng', 'KaiTi', 'Noto Serif SC', serif;
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4px;
+            box-sizing: border-box;
+        }
+        .seal-preview .seal-name-row { font-size: 0.95rem; line-height: 1.2; white-space: nowrap; }
+        .seal-preview .seal-latin-row { font-size: 0.5rem; color: #991b1b; margin-top: 2px; font-weight: normal; }
+        .seal-preview .seal-size-label { font-size: 0.4rem; color: #9ca3af; margin-top: 2px; font-weight: normal; }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
@@ -119,21 +138,19 @@
                     <div class="p-4 rounded-2xl border-2 border-red-100 bg-white/80">
                         <p class="text-sm font-bold text-gray-800 mb-2">Choose your seal design</p>
                         <p class="text-xs text-gray-500 mb-3">We’ll make the physical seal and ship it from China.</p>
+                        <p class="text-xs text-gray-500 mb-2">15mm × 15mm square, white base, red text.</p>
                         <div id="sealChoices" class="grid grid-cols-3 gap-3 mb-4">
-                            <button type="button" data-seal="0" class="seal-option border-2 border-transparent rounded-xl p-2 hover:border-red-500 transition-all" onclick="selectSeal(0)">
-                                <div class="seal-preview seal-style-0 w-full aspect-square rounded-lg flex flex-col items-center justify-center text-white font-bold text-xl bg-red-700"></div>
-                                <div class="seal-latin text-xs text-gray-600 mt-1 text-center min-h-[1rem]"></div>
-                                <span class="text-xs mt-0.5 block text-center">Style A</span>
+                            <button type="button" data-seal="0" class="seal-option border-2 border-transparent rounded-xl p-2 hover:border-red-500 transition-all flex flex-col items-center" onclick="selectSeal(0)">
+                                <div class="seal-preview"></div>
+                                <span class="text-xs mt-1.5 block text-center">Style A</span>
                             </button>
-                            <button type="button" data-seal="1" class="seal-option border-2 border-transparent rounded-xl p-2 hover:border-red-500 transition-all" onclick="selectSeal(1)">
-                                <div class="seal-preview seal-style-1 w-full aspect-square rounded-full flex flex-col items-center justify-center text-white font-bold text-xl bg-red-800"></div>
-                                <div class="seal-latin text-xs text-gray-600 mt-1 text-center min-h-[1rem]"></div>
-                                <span class="text-xs mt-0.5 block text-center">Style B</span>
+                            <button type="button" data-seal="1" class="seal-option border-2 border-transparent rounded-xl p-2 hover:border-red-500 transition-all flex flex-col items-center" onclick="selectSeal(1)">
+                                <div class="seal-preview"></div>
+                                <span class="text-xs mt-1.5 block text-center">Style B</span>
                             </button>
-                            <button type="button" data-seal="2" class="seal-option border-2 border-transparent rounded-xl p-2 hover:border-red-500 transition-all" onclick="selectSeal(2)">
-                                <div class="seal-preview seal-style-2 w-full aspect-square rounded-lg flex flex-col items-center justify-center text-white font-bold text-xl bg-red-900 border-4 border-red-700"></div>
-                                <div class="seal-latin text-xs text-gray-600 mt-1 text-center min-h-[1rem]"></div>
-                                <span class="text-xs mt-0.5 block text-center">Style C</span>
+                            <button type="button" data-seal="2" class="seal-option border-2 border-transparent rounded-xl p-2 hover:border-red-500 transition-all flex flex-col items-center" onclick="selectSeal(2)">
+                                <div class="seal-preview"></div>
+                                <span class="text-xs mt-1.5 block text-center">Style C</span>
                             </button>
                         </div>
                         <p id="sealSelectedHint" class="text-xs text-amber-700 mb-3 hidden">Selected: Style <span id="sealSelectedLabel"></span></p>
@@ -397,12 +414,12 @@
             if (!name) return;
             var latin = document.getElementById('customerName').value.trim();
             var previews = document.querySelectorAll('.seal-preview');
-            var latins = document.querySelectorAll('.seal-latin');
             for (var i = 0; i < previews.length; i++) {
-                previews[i].innerHTML = '<span class="block leading-tight">' + name + '</span>';
-                if (latin) previews[i].innerHTML += '<span class="block text-sm opacity-90 mt-0.5 font-normal">' + latin + '</span>';
+                var html = '<span class="seal-name-row">' + name + '</span>';
+                if (latin) html += '<span class="seal-latin-row">' + latin + '</span>';
+                html += '<span class="seal-size-label">15×15mm</span>';
+                previews[i].innerHTML = html;
             }
-            for (var j = 0; j < latins.length; j++) { latins[j].textContent = ''; }
         }
         function selectSeal(i) {
             selectedSealIndex = i;

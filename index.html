@@ -221,7 +221,8 @@
                 <h3 class="text-lg font-bold text-gray-800">Stroke order & pronunciation</h3>
                 <button type="button" onclick="closeVideoModal()" class="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
             </div>
-            <p id="videoModalName" class="text-center text-red-700 font-bold text-xl mb-2"></p>
+            <p id="videoModalName" class="text-center text-red-700 font-bold text-xl mb-0"></p>
+            <p id="videoModalPinyin" class="text-center text-gray-500 text-sm mt-1 mb-2"></p>
             <div id="strokeOrderContainer" class="flex flex-wrap justify-center gap-4 my-6 min-h-[120px]"></div>
             <div class="flex justify-center gap-2">
                 <button type="button" onclick="playStrokeOrder()" class="px-4 py-2 rounded-lg bg-red-700 text-white text-sm font-bold">Play stroke order</button>
@@ -332,7 +333,9 @@
             var modal = document.getElementById('videoModal');
             var container = document.getElementById('strokeOrderContainer');
             var nameEl = document.getElementById('videoModalName');
+            var pinyinEl = document.getElementById('videoModalPinyin');
             nameEl.textContent = name;
+            pinyinEl.textContent = toPinyin(name);
             container.innerHTML = '';
             strokeWriters = [];
             if (typeof HanziWriter !== 'undefined') {
@@ -360,6 +363,35 @@
         }
         function closeVideoModal() {
             document.getElementById('videoModal').classList.add('hidden');
+        }
+        /* 常用汉字拼音（带声调），用于名字下方注音；缺字则显示原字 */
+        var PINYIN_MAP = {
+            '李':'lǐ','王':'wáng','张':'zhāng','刘':'liú','陈':'chén','杨':'yáng','黄':'huáng','赵':'zhào','周':'zhōu','吴':'wú',
+            '徐':'xú','孙':'sūn','马':'mǎ','朱':'zhū','胡':'hú','郭':'guō','何':'hé','高':'gāo','林':'lín','罗':'luó',
+            '郑':'zhèng','梁':'liáng','谢':'xiè','宋':'sòng','唐':'táng','许':'xǔ','韩':'hán','冯':'féng','邓':'dèng','曹':'cáo',
+            '彭':'péng','曾':'zēng','肖':'xiāo','田':'tián','董':'dǒng','潘':'pān','袁':'yuán','蔡':'cài','蒋':'jiǎng','余':'yú',
+            '于':'yú','杜':'dù','叶':'yè','程':'chéng','苏':'sū','魏':'wèi','吕':'lǚ','丁':'dīng','任':'rén','沈':'shěn',
+            '姚':'yáo','卢':'lú','姜':'jiāng','崔':'cuī','钟':'zhōng','谭':'tán','陆':'lù','汪':'wāng','范':'fàn','金':'jīn',
+            '石':'shí','廖':'liào','贾':'jiǎ','夏':'xià','韦':'wéi','傅':'fù','方':'fāng','白':'bái','邹':'zōu','孟':'mèng',
+            '熊':'xióng','秦':'qín','邱':'qiū','江':'jiāng','尹':'yǐn','薛':'xuē','闫':'yán','段':'duàn','雷':'léi','侯':'hóu',
+            '龙':'lóng','史':'shǐ','陶':'táo','黎':'lí','贺':'hè','顾':'gù','毛':'máo','郝':'hǎo','龚':'gōng','邵':'shào',
+            '万':'wàn','钱':'qián','严':'yán','武':'wǔ','戴':'dài','莫':'mò','孔':'kǒng','向':'xiàng','汤':'tāng',
+            '伟':'wěi','芳':'fāng','娜':'nà','敏':'mǐn','静':'jìng','丽':'lì','强':'qiáng','磊':'lěi','军':'jūn','洋':'yáng',
+            '勇':'yǒng','艳':'yàn','杰':'jié','娟':'juān','涛':'tāo','明':'míng','超':'chāo','秀':'xiù','英':'yīng','华':'huá',
+            '文':'wén','玉':'yù','兰':'lán','红':'hóng','霞':'xiá','平':'píng','建':'jiàn','国':'guó','飞':'fēi','波':'bō',
+            '斌':'bīn','辉':'huī','峰':'fēng','磊':'lěi','阳':'yáng','浩':'hào','宇':'yǔ','轩':'xuān','睿':'ruì','思':'sī',
+            '欣':'xīn','怡':'yí','琳':'lín','婷':'tíng','雪':'xuě','梅':'méi','云':'yún','月':'yuè','星':'xīng','晨':'chén',
+            '晓':'xiǎo','梦':'mèng','诗':'shī','雨':'yǔ','嘉':'jiā','俊':'jùn','博':'bó','子':'zǐ','梓':'zǐ','涵':'hán',
+            '萱':'xuān','若':'ruò','芷':'zhǐ','熙':'xī','安':'ān','宁':'níng','乐':'lè','悦':'yuè','心':'xīn','爱':'ài'
+        };
+        function toPinyin(name) {
+            if (!name) return '';
+            var out = [];
+            for (var i = 0; i < name.length; i++) {
+                var c = name[i];
+                out.push(PINYIN_MAP[c] || c);
+            }
+            return out.join(' ');
         }
         function playStrokeOrder() {
             if (!strokeWriters.length) return;

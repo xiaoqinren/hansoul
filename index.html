@@ -50,7 +50,8 @@
         }
         .name-card-wrap::before { left: 8px; }
         .name-card-wrap::after { right: 8px; border-left: none; }
-        .name-card-name { font-family: 'Ma Shan Zheng', 'Noto Serif SC', serif; font-size: 2.5rem; color: #1a1a1a; line-height: 1.4; text-align: center; margin-bottom: 12px; }
+        /* 名片名字：毛笔风 马善政 为主，楷体/宋体 备选，最能代表中国书写传统 */
+        .name-card-name { font-family: 'Ma Shan Zheng', 'KaiTi', 'STKaiti', 'SimKai', 'Noto Serif SC', serif; font-size: 2.5rem; color: #1a1a1a; line-height: 1.4; text-align: center; margin-bottom: 12px; }
         .name-card-divider { width: 60px; height: 2px; background: #b91c1c; margin: 12px auto; }
         .name-card-brand { font-family: 'Noto Serif SC', serif; font-size: 0.75rem; color: #7f1d1d; letter-spacing: 0.2em; text-align: center; }
         .name-card-slogan { font-size: 0.65rem; color: #991b1b; opacity: 0.9; text-align: center; margin-top: 4px; font-style: italic; }
@@ -165,10 +166,20 @@
             }
         }
 
+        function extractNameOnly(fullText) {
+            var s = fullText.trim().replace(/\s+/g, ' ');
+            var afterColon = s.split(/[：:]/).pop().trim();
+            afterColon = afterColon.replace(/\s*[（(].*?[）)]\s*/g, '').trim();
+            var firstLine = afterColon.split(/[\n\r]/)[0].trim();
+            var match = firstLine.match(/[\u4e00-\u9fff]{2,6}/);
+            return match ? match[0] : (firstLine.slice(0, 6) || firstLine);
+        }
+
         function showNameCard() {
-            var nameText = document.getElementById('resultText').innerText.trim();
-            if (!nameText) return;
-            document.getElementById('nameCardName').innerText = nameText;
+            var fullText = document.getElementById('resultText').innerText.trim();
+            if (!fullText) return;
+            var nameOnly = extractNameOnly(fullText);
+            document.getElementById('nameCardName').innerText = nameOnly;
             document.getElementById('nameCardContainer').classList.remove('hidden');
         }
 

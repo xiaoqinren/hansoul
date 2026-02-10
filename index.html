@@ -59,14 +59,13 @@
         .name-card-divider { width: 60px; height: 2px; background: #b91c1c; margin: 12px auto; }
         .name-card-brand { font-family: 'Noto Serif SC', serif; font-size: 0.75rem; color: #7f1d1d; letter-spacing: 0.2em; text-align: center; }
         .name-card-slogan { font-size: 0.65rem; color: #991b1b; opacity: 0.9; text-align: center; margin-top: 4px; font-style: italic; }
-        /* 印章：15mm 方形，白底红字，名字横排，本名在下小字，标注尺寸 */
+        /* 印章：15mm 方形，白底红字，名字横排，本名在下小字，标注尺寸。三种风格用三种主流中文字体区分 */
         .seal-preview {
             width: 56px; height: 56px;
             background: #fff;
             color: #b91c1c;
             border: 2px solid #b91c1c;
             border-radius: 2px;
-            font-family: 'Ma Shan Zheng', 'KaiTi', 'Noto Serif SC', serif;
             font-weight: bold;
             display: flex;
             flex-direction: column;
@@ -75,89 +74,109 @@
             padding: 4px;
             box-sizing: border-box;
         }
+        /* Style A：楷体 — 端庄易读、传统楷书 */
+        .seal-preview.seal-font-kai { font-family: 'KaiTi', 'STKaiti', '楷体', 'SimKai', serif; }
+        /* Style B：宋体 — 印刷体、横细竖粗、正式 */
+        .seal-preview.seal-font-song { font-family: 'SimSun', '宋体', 'Song', 'STSong', serif; }
+        /* Style C：隶书 — 古朴、隶变风格 */
+        .seal-preview.seal-font-li { font-family: 'LiSu', '隶书', 'STLiti', serif; }
         .seal-preview .seal-name-row { font-size: 0.95rem; line-height: 1.2; white-space: nowrap; }
         .seal-preview .seal-latin-row { font-size: 0.5rem; color: #991b1b; margin-top: 2px; font-weight: normal; }
         .seal-preview .seal-size-label { font-size: 0.4rem; color: #9ca3af; margin-top: 2px; font-weight: normal; }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4">
-    <div class="max-w-md w-full glass rounded-3xl shadow-2xl overflow-hidden border-t-8 border-red-700 p-8">
-        <header class="text-center mb-8">
-            <h1 class="ink-title text-6xl text-red-700 mb-2">印刻</h1>
-            <h2 class="text-2xl font-black tracking-widest text-gray-800">INKUL</h2>
-            <p class="text-gray-500 italic mt-2">Every soul deserves a Chinese name.</p>
+<body class="min-h-screen flex items-center justify-center p-3 sm:p-4">
+    <div class="max-w-md w-full glass rounded-3xl shadow-2xl overflow-hidden border-t-8 border-red-700 p-5 sm:p-6">
+        <header class="text-center mb-5">
+            <h1 class="ink-title text-5xl sm:text-6xl text-red-700 mb-1">印刻</h1>
+            <h2 class="text-xl sm:text-2xl font-black tracking-widest text-gray-800">INKUL</h2>
+            <p class="text-gray-500 italic mt-1 text-sm">Every soul deserves a Chinese name.</p>
         </header>
 
-        <div class="space-y-6">
+        <div class="space-y-4">
             <div>
-                <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wider">Your name</label>
+                <label class="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-wider">Your name</label>
                 <input type="text" id="customerName" placeholder="e.g. John Smith"
-                    class="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-red-700 focus:ring-0 outline-none bg-white/50 mb-2" />
+                    class="w-full px-3 py-2.5 rounded-lg border-2 border-gray-100 focus:border-red-700 focus:ring-0 outline-none bg-white/50 text-sm" />
             </div>
             <div>
-                <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wider">Tell us your story</label>
-                <textarea id="userStory" rows="3" 
-                    class="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-red-700 focus:ring-0 transition-all outline-none resize-none bg-white/50"
+                <label class="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-wider">Tell us your story</label>
+                <textarea id="userStory" rows="2" 
+                    class="w-full px-3 py-2.5 rounded-lg border-2 border-gray-100 focus:border-red-700 focus:ring-0 transition-all outline-none resize-none bg-white/50 text-sm"
                     placeholder="E.g. I love the ocean, I am a brave explorer from London..."></textarea>
             </div>
 
             <button onclick="generateName()" id="btnText"
-                class="btn-ink w-full py-4 rounded-xl text-white font-bold text-lg tracking-widest">
+                class="btn-ink w-full py-3 rounded-xl text-white font-bold text-sm tracking-widest">
                 REVEAL MY IDENTITY
             </button>
-            <p id="generateHint" class="hidden mt-2 text-center text-sm text-amber-700">
+            <p id="generateHint" class="hidden mt-1.5 text-center text-xs text-amber-700">
                 The ancients are weaving your name. <span id="generateCountdown" class="font-bold">60s</span>
             </p>
 
-            <div id="resultArea" class="hidden mt-8 p-6 bg-red-50 rounded-2xl border-l-4 border-red-700 animate-fade-in">
-                <h3 class="text-red-800 font-bold mb-2 flex items-center">
+            <div id="resultArea" class="hidden mt-5 p-4 bg-red-50 rounded-2xl border-l-4 border-red-700 animate-fade-in">
+                <h3 class="text-red-800 font-bold mb-1.5 text-sm flex items-center">
                     <span class="mr-2 italic">Your Chinese Soul Name:</span>
                 </h3>
-                <div id="resultText" class="text-gray-800 leading-relaxed text-lg"></div>
+                <div id="resultText" class="text-gray-800 leading-relaxed text-base"></div>
+                <!-- 结果区：名片 | 印章+视频 并排，小屏上下 -->
+                <div class="result-grid mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <!-- 生成中国风名片 -->
-                <div id="nameCardSection" class="mt-4 hidden">
-                    <button type="button" onclick="showNameCard()" class="btn-ink w-full py-3 rounded-xl text-white font-bold text-sm tracking-widest">
+                <div id="nameCardSection" class="hidden">
+                    <button type="button" onclick="showNameCard()" class="btn-ink w-full py-2.5 rounded-xl text-white font-bold text-xs tracking-widest">
                         GET MY NAME CARD
                     </button>
-                    <div id="nameCardContainer" class="hidden mt-4 flex flex-col items-center">
-                        <p class="text-xs text-gray-500 mb-2 text-center w-full">Your Chinese-style name card</p>
-                        <div id="nameCardEl" class="name-card-wrap">
+                    <div id="nameCardContainer" class="hidden mt-3 flex flex-col items-center">
+                        <p class="text-xs text-gray-500 mb-1.5 text-center w-full">Your Chinese-style name card</p>
+                        <div id="nameCardEl" class="name-card-wrap scale-90 origin-top">
                             <div id="nameCardName" class="name-card-name"></div>
                             <div id="nameCardLatin" class="name-card-latin text-center text-gray-600 text-sm mt-1"></div>
                             <div class="name-card-divider"></div>
                             <p class="name-card-brand">印刻 INKUL</p>
                             <p class="name-card-slogan">Every soul deserves a Chinese name.</p>
                         </div>
-                        <button type="button" onclick="downloadNameCard()" class="mt-3 w-full py-2 rounded-lg border-2 border-red-700 text-red-700 font-bold text-sm hover:bg-red-50 transition-colors">
+                        <button type="button" onclick="downloadNameCard()" class="mt-2 w-full py-1.5 rounded-lg border-2 border-red-700 text-red-700 font-bold text-xs hover:bg-red-50 transition-colors">
                             Download as image
                         </button>
                     </div>
                 </div>
-                <!-- 印章选款 + 地址 + 付款 -->
-                <div id="sealSection" class="mt-4 hidden">
-                    <div class="p-4 rounded-2xl border-2 border-red-100 bg-white/80">
-                        <p class="text-sm font-bold text-gray-800 mb-2">Choose your seal design</p>
-                        <p class="text-xs text-gray-500 mb-3">We’ll make the physical seal and ship it from China.</p>
-                        <p class="text-xs text-gray-500 mb-2">15mm × 15mm square, white base, red text.</p>
-                        <div id="sealChoices" class="grid grid-cols-3 gap-3 mb-4">
-                            <button type="button" data-seal="0" class="seal-option border-2 border-transparent rounded-xl p-2 hover:border-red-500 transition-all flex flex-col items-center" onclick="selectSeal(0)">
-                                <div class="seal-preview"></div>
-                                <span class="text-xs mt-1.5 block text-center">Style A</span>
+                <!-- 印章选款 + 视频 -->
+                <div class="space-y-3">
+                <div id="sealSection" class="hidden">
+                    <div class="p-3 rounded-xl border-2 border-red-100 bg-white/80">
+                        <p class="text-xs font-bold text-gray-800 mb-1.5">Choose your seal design</p>
+                        <p class="text-xs text-gray-500 mb-2">15mm square, we ship from China.</p>
+                        <div id="sealChoices" class="grid grid-cols-3 gap-2 mb-3">
+                            <button type="button" data-seal="0" class="seal-option border-2 border-transparent rounded-lg p-1.5 hover:border-red-500 transition-all flex flex-col items-center" onclick="selectSeal(0)">
+                                <div class="seal-preview seal-font-kai"></div>
+                                <span class="text-[10px] mt-1 block text-center">A 楷体</span>
                             </button>
-                            <button type="button" data-seal="1" class="seal-option border-2 border-transparent rounded-xl p-2 hover:border-red-500 transition-all flex flex-col items-center" onclick="selectSeal(1)">
-                                <div class="seal-preview"></div>
-                                <span class="text-xs mt-1.5 block text-center">Style B</span>
+                            <button type="button" data-seal="1" class="seal-option border-2 border-transparent rounded-lg p-1.5 hover:border-red-500 transition-all flex flex-col items-center" onclick="selectSeal(1)">
+                                <div class="seal-preview seal-font-song"></div>
+                                <span class="text-[10px] mt-1 block text-center">B 宋体</span>
                             </button>
-                            <button type="button" data-seal="2" class="seal-option border-2 border-transparent rounded-xl p-2 hover:border-red-500 transition-all flex flex-col items-center" onclick="selectSeal(2)">
-                                <div class="seal-preview"></div>
-                                <span class="text-xs mt-1.5 block text-center">Style C</span>
+                            <button type="button" data-seal="2" class="seal-option border-2 border-transparent rounded-lg p-1.5 hover:border-red-500 transition-all flex flex-col items-center" onclick="selectSeal(2)">
+                                <div class="seal-preview seal-font-li"></div>
+                                <span class="text-[10px] mt-1 block text-center">C 隶书</span>
                             </button>
                         </div>
-                        <p id="sealSelectedHint" class="text-xs text-amber-700 mb-3 hidden">Selected: Style <span id="sealSelectedLabel"></span></p>
-                        <button type="button" id="btnSealCheckout" onclick="openSealCheckout()" class="btn-ink w-full py-3 rounded-xl text-white font-bold text-sm tracking-widest" disabled>
+                        <p id="sealSelectedHint" class="text-xs text-amber-700 mb-2 hidden">Selected: Style <span id="sealSelectedLabel"></span></p>
+                        <button type="button" id="btnSealCheckout" onclick="openSealCheckout()" class="btn-ink w-full py-2.5 rounded-xl text-white font-bold text-xs tracking-widest" disabled>
                             PROCEED TO CHECKOUT
                         </button>
                     </div>
+                </div>
+                <!-- 付费：笔顺 + 读音视频 -->
+                <div id="videoSection" class="hidden">
+                    <div class="p-3 rounded-xl border-2 border-amber-200 bg-amber-50/80">
+                        <p class="text-xs font-bold text-amber-900 mb-0.5">Stroke-order & pronunciation</p>
+                        <p class="text-xs text-amber-800 mb-2">$9.90</p>
+                        <button type="button" id="btnPurchaseVideo" onclick="purchaseVideo()" class="btn-ink w-full py-2.5 rounded-xl text-white font-bold text-xs tracking-widest">
+                            PURCHASE VIDEO
+                        </button>
+                    </div>
+                </div>
+                </div>
                 </div>
                 <div id="sealAddressModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 hidden">
                     <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto p-6">
@@ -180,43 +199,23 @@
                         </form>
                     </div>
                 </div>
-                <!-- 付费：笔顺 + 读音视频 -->
-                <div id="videoSection" class="mt-4 hidden">
-                    <div class="p-4 rounded-2xl border-2 border-amber-200 bg-amber-50/80">
-                        <p class="text-sm font-bold text-amber-900 mb-1">Stroke-order & pronunciation</p>
-                        <p class="text-xs text-amber-800 mb-3">Learn how to write and say your name.</p>
-                        <p class="text-lg font-black text-red-700 mb-3">$9.90</p>
-                        <button type="button" id="btnPurchaseVideo" onclick="purchaseVideo()" class="btn-ink w-full py-3 rounded-xl text-white font-bold text-sm tracking-widest">
-                            PURCHASE VIDEO
-                        </button>
-                    </div>
-                </div>
-                <!-- 取名后的完整旅程 -->
-                <div id="journeyArea" class="mt-6 pt-6 border-t border-red-200">
-                    <p class="text-sm font-bold text-gray-700 mb-3 uppercase tracking-wider">Your journey with INKUL</p>
-                    <ol class="space-y-3 text-sm text-gray-600">
-                        <li class="flex items-start gap-2">
-                            <span class="flex-shrink-0 w-5 h-5 rounded-full bg-red-100 text-red-700 flex items-center justify-center text-xs font-bold">1</span>
-                            <span><strong class="text-gray-800">Name card</strong> — We’ll generate a Chinese-style name card for you.</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="flex-shrink-0 w-5 h-5 rounded-full bg-red-100 text-red-700 flex items-center justify-center text-xs font-bold">2</span>
-                            <span><strong class="text-gray-800">Stroke-order video</strong> — Learn how to write your name. <em class="text-red-600">(Paid)</em></span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="flex-shrink-0 w-5 h-5 rounded-full bg-red-100 text-red-700 flex items-center justify-center text-xs font-bold">3</span>
-                            <span><strong class="text-gray-800">Seal design</strong> — Choose from several traditional seal patterns; we can ship the physical seal from China.</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="flex-shrink-0 w-5 h-5 rounded-full bg-red-100 text-red-700 flex items-center justify-center text-xs font-bold">4</span>
-                            <span><strong class="text-gray-800">Physical kit</strong> — Optional: brush, practice paper, and your seal delivered to your door.</span>
-                        </li>
+                <!-- 取名后的完整旅程：可折叠 -->
+                <div id="journeyArea" class="mt-4 pt-4 border-t border-red-200">
+                    <button type="button" id="journeyToggle" onclick="toggleJourney()" class="w-full flex items-center justify-between text-left text-xs font-bold text-gray-700 uppercase tracking-wider py-1 rounded hover:bg-red-50/50 transition-colors">
+                        <span>Your journey with INKUL</span>
+                        <span id="journeyChevron" class="text-red-600 transition-transform">▼</span>
+                    </button>
+                    <ol id="journeyList" class="mt-2 space-y-2 text-xs text-gray-600 hidden">
+                        <li class="flex items-start gap-2"><span class="flex-shrink-0 w-4 h-4 rounded-full bg-red-100 text-red-700 flex items-center justify-center text-[10px] font-bold">1</span><span><strong class="text-gray-800">Name card</strong> — Chinese-style name card.</span></li>
+                        <li class="flex items-start gap-2"><span class="flex-shrink-0 w-4 h-4 rounded-full bg-red-100 text-red-700 flex items-center justify-center text-[10px] font-bold">2</span><span><strong class="text-gray-800">Stroke-order video</strong> <em class="text-red-600">(Paid)</em></span></li>
+                        <li class="flex items-start gap-2"><span class="flex-shrink-0 w-4 h-4 rounded-full bg-red-100 text-red-700 flex items-center justify-center text-[10px] font-bold">3</span><span><strong class="text-gray-800">Seal</strong> — We ship from China.</span></li>
+                        <li class="flex items-start gap-2"><span class="flex-shrink-0 w-4 h-4 rounded-full bg-red-100 text-red-700 flex items-center justify-center text-[10px] font-bold">4</span><span><strong class="text-gray-800">Physical kit</strong> — Optional.</span></li>
                     </ol>
                 </div>
             </div>
         </div>
 
-        <footer class="mt-12 text-center text-xs text-gray-400 tracking-widest uppercase">
+        <footer class="mt-6 text-center text-xs text-gray-400 tracking-widest uppercase">
             &copy; 2026 INKUL · Inheriting Culture
         </footer>
     </div>
@@ -419,6 +418,17 @@
                 if (latin) html += '<span class="seal-latin-row">' + latin + '</span>';
                 html += '<span class="seal-size-label">15×15mm</span>';
                 previews[i].innerHTML = html;
+            }
+        }
+        function toggleJourney() {
+            var list = document.getElementById('journeyList');
+            var chevron = document.getElementById('journeyChevron');
+            if (list.classList.contains('hidden')) {
+                list.classList.remove('hidden');
+                if (chevron) chevron.style.transform = 'rotate(180deg)';
+            } else {
+                list.classList.add('hidden');
+                if (chevron) chevron.style.transform = '';
             }
         }
         function selectSeal(i) {

@@ -8,7 +8,8 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Missing or empty prompt' });
     }
 
-    const API_KEY = "sk-fc3a51f125254fbab1477c0fa25b0cf8";
+    // 从环境变量读取百炼 API Key，避免把密钥写死在代码里
+    const API_KEY = (process.env.DASHSCOPE_API_KEY || "").trim();
     const APP_ID = "2ad8881cc5a5492b9636afd2832fe4e3";
     // Vercel 部署在美国，用国内 endpoint 可能被拒。若仍报 Invalid API-key，在 Vercel 设 DASHSCOPE_BASE_URL=https://dashscope-intl.aliyuncs.com 试国际版（需国际版账号的 Key）
     const BASE_URL = process.env.DASHSCOPE_BASE_URL || "https://dashscope.aliyuncs.com";
@@ -51,6 +52,9 @@ export default async function handler(req, res) {
         }
         return res.status(200).json({ error: data.message || "AI returned no text" });
     } catch (error) {
-        return res.status(500).json({ error: "Backend server error" });
+        console.error("DashScope backend error:", error);
+        return res.status(500).json({
+            error: "Backend server error: " + (error && error.message ? error.message : "unknown")
+        });
     }
 }

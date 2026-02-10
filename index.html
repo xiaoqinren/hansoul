@@ -88,8 +88,20 @@
                 <input type="text" id="customerName" placeholder="e.g. John Smith"
                     class="w-full px-3 py-2.5 rounded-lg border-2 border-gray-100 focus:border-red-700 focus:ring-0 outline-none bg-white/50 text-sm" />
                 <label class="mt-2 block text-[11px] font-semibold text-gray-600">Birth date (optional)</label>
-                <input type="date" id="birthDate"
-                    class="mt-1 w-full px-3 py-2 rounded-lg border-2 border-gray-100 focus:border-red-700 focus:ring-0 outline-none bg-white/50 text-xs text-gray-700" />
+                <div class="mt-1 flex gap-2">
+                    <select id="birthYear"
+                        class="flex-1 px-2 py-2 rounded-lg border-2 border-gray-100 focus:border-red-700 focus:ring-0 outline-none bg-white/50 text-xs text-gray-700">
+                        <option value="">Year</option>
+                    </select>
+                    <select id="birthMonth"
+                        class="w-20 px-2 py-2 rounded-lg border-2 border-gray-100 focus:border-red-700 focus:ring-0 outline-none bg-white/50 text-xs text-gray-700">
+                        <option value="">Month</option>
+                    </select>
+                    <select id="birthDay"
+                        class="w-20 px-2 py-2 rounded-lg border-2 border-gray-100 focus:border-red-700 focus:ring-0 outline-none bg-white/50 text-xs text-gray-700">
+                        <option value="">Day</option>
+                    </select>
+                </div>
             </div>
             <div>
                 <label class="block text-xs font-bold text-gray-700 mb-1.5 uppercase tracking-wider">Tell us your story</label>
@@ -241,6 +253,35 @@
     </div>
 
     <script>
+        // 初始化生日下拉（年、月、日），在手机上是上下滚动选择
+        document.addEventListener('DOMContentLoaded', function() {
+            var yearSel = document.getElementById('birthYear');
+            var monthSel = document.getElementById('birthMonth');
+            var daySel = document.getElementById('birthDay');
+            if (yearSel && monthSel && daySel) {
+                var currentYear = new Date().getFullYear();
+                var startYear = currentYear - 80;
+                for (var y = currentYear; y >= startYear; y--) {
+                    var opt = document.createElement('option');
+                    opt.value = String(y);
+                    opt.textContent = y;
+                    yearSel.appendChild(opt);
+                }
+                for (var m = 1; m <= 12; m++) {
+                    var optM = document.createElement('option');
+                    optM.value = String(m);
+                    optM.textContent = m;
+                    monthSel.appendChild(optM);
+                }
+                for (var d = 1; d <= 31; d++) {
+                    var optD = document.createElement('option');
+                    optD.value = String(d);
+                    optD.textContent = d;
+                    daySel.appendChild(optD);
+                }
+            }
+        });
+
         async function generateName() {
             const story = document.getElementById('userStory').value;
             const btn = document.getElementById('btnText');
@@ -316,7 +357,8 @@
             latinEl.style.display = latin ? 'block' : 'none';
 
             // 根据出生年份计算生肖，在中文名与英文名之间展示图案（仅图标，不显示汉字）
-            var birth = document.getElementById('birthDate') ? document.getElementById('birthDate').value : '';
+            var birthYearEl = document.getElementById('birthYear');
+            var birth = birthYearEl ? birthYearEl.value : '';
             var zodiacChar = '';
             if (birth && birth.length >= 4) {
                 var year = parseInt(birth.slice(0, 4), 10);
@@ -441,22 +483,10 @@
             if (!name) return alert('Get your Chinese name first.');
             var btn = document.getElementById('btnPurchaseVideo');
             btn.disabled = true;
-            btn.textContent = 'Processing...';
-            try {
-                var res = await fetch('/api/create-checkout', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name: name })
-                });
-                var data = await res.json();
-                if (data.url) {
-                    window.location.href = data.url;
-                    return;
-                }
-            } catch (e) { console.warn(e); }
-            btn.disabled = false;
-            btn.textContent = 'PURCHASE VIDEO';
-            openVideoModal(name);
+            btn.textContent = 'Redirecting...';
+            // 使用 Lemon Squeezy 托管的结算页收款
+            var baseUrl = 'https://inkul.lemonsqueezy.com/checkout/buy/77de44f5-2eb4-41a2-8744-b15d1678fdc0';
+            window.location.href = baseUrl;
         }
         var selectedSealIndex = -1;
         function renderSealPreviews(name) {
@@ -547,13 +577,9 @@
                     body: JSON.stringify({ name: name, sealIndex: selectedSealIndex, address: address })
                 });
                 var data = await res.json();
-                if (data.paymentUrl) {
-                    window.location.href = data.paymentUrl;
-                    return;
-                }
-                if (data.orderId && !data.paymentUrl) {
-                    alert('Order ' + data.orderId + ' recorded. Payment is not configured yet; we\'ll contact you.');
-                    closeSealCheckout();
+                if (data.orderId) {
+                    // 订单已记录（并邮件通知），跳转到 Lemon Squeezy 的印章结算页
+                    window.location.href = 'https://inkul.lemonsqueezy.com/checkout/buy/63930c42-86e1-4a4f-9d42-cfd13815c494';
                     return;
                 }
                 alert(data.error || 'Could not create order.');
